@@ -134,11 +134,11 @@ function level_1(){
     this.physics.world.setBounds(0, 0, 256*sf*4, 240*sf);
     camera.setBounds(0, 0, 256*sf*4, 240*sf);
     camera.startFollow(player, true, 0.05, 0, -80*sf, 0*sf);
-    for (let i = 40; i < 50; i++) {
-        spikes.create(i*16*sf, 200*sf, 'spikes').setScale(sf).refreshBody();
+    for (let i = 10; i < 15; i++) {
+        spikes.create(i*48*sf, 200*sf, 'spikes').setScale(sf).refreshBody();
     }
     for (let i = 0; i < 5; i++) {
-        baddies.create(Phaser.Math.Between(64, 960)*sf, 0, 'baddie').setScale(sf).setBounce(1.01).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
+        baddies.create(Phaser.Math.Between(64, 960)*sf, 0, 'baddie').setScale(sf).setBounce(0.75).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
     }
 }
 function level_2(){
@@ -169,7 +169,7 @@ function level_2(){
     camera.setBounds(0, 0, 256*sf, 240*sf*4);
     camera.startFollow(player, true, 0, 0.05, -80*sf, 0*sf);
     for (let i = 0; i < 5; i++) {
-        baddies.create(Phaser.Math.Between(64, 192)*sf, 920*sf, 'baddie').setScale(sf).setBounce(1.01).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
+        baddies.create(Phaser.Math.Between(64, 192)*sf, 920*sf, 'baddie').setScale(sf).setBounce(0.75).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
     }
 }
 function level_3(){
