@@ -39,12 +39,11 @@ var vel = 40 * sf;
 var jump = 80 * sf;
 var jumped = 0;
 var camera;
-var level = 1;
-var invuln = false;
+var invuln;
 let Grav;
 let Fire;
 let Jet;
-let jetpack_enabled = false;
+let jetpack_enabled;
 function hitBad(object1, object2){
     if (object2.body.touching.up){
         object2.destroy();
@@ -79,12 +78,16 @@ function loselife(){
         this.time.delayedCall(1000, revuln);
     }
     if (lives <= 0){
-        gameOver();
+        gameOver.call(this);
     }
 }
 function gameOver(){
     console.log("You lose");
-    create_level.call(this, 1)
+    this.scene.restart();
+    create_level.call(this, 1);
+    lives = 5;
+    jetpack_enabled = false;
+    invuln = false;
 }
 function revuln(){
     invuln = false;
