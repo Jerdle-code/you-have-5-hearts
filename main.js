@@ -24,7 +24,7 @@ var baddies;
 var cursors;
 var lives = 5;
 var hearts;
-var powerups = 0; //Storing as bitmap for no reason other than 8bitness
+var powerups = 1; //Storing as bitmap for no reason other than 8bitness
 /* 1 = double jump
 2 = jetpack
 4 = antigravity
@@ -38,6 +38,7 @@ var vel = 40 * sf;
 var jump = 80 * sf;
 var jumped = 0;
 var camera;
+var level = 2;
 var invuln = false;
 function loselife(){
     if (!invuln){
@@ -79,9 +80,8 @@ function preload() {
     this.load.image('noheart', './img/Heart_empty.png');
     this.load.image('baddie', './img/Baddie.png');
 }
-function create (){
+function level_1(){
     this.add.image(512*sf,120*sf,'bg_hills').setScale(sf);
-    platforms = this.physics.add.staticGroup();
     platforms.create(512*sf, 224*sf, 'pf_hills').setScale(sf*128, sf*4).refreshBody();
     platforms.create(64*sf, 176*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
     platforms.create(128*sf, 144*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
@@ -95,26 +95,67 @@ function create (){
     platforms.create(816*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
     platforms.create(912*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
     platforms.create(1024*sf, 32*sf, 'pf_hills').setScale(sf*8, sf).refreshBody();
-    player = this.physics.add.sprite(16*sf,192*sf,'player').setScale(sf);
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
-    this.physics.add.collider(player, platforms);
-    cursors = this.input.keyboard.createCursorKeys();
     this.physics.world.setBounds(0, 0, 256*sf*4, 240*sf);
-    camera = this.cameras.main;
     camera.setBounds(0, 0, 256*sf*4, 240*sf);
-    camera.startFollow(player, true, 0.05, 0, -80*sf, 40*sf);
-    spikes = this.physics.add.staticGroup();
+    camera.startFollow(player, true, 0.05, 0, -80*sf, 0*sf);
     for (let i = 40; i < 50; i++) {
         spikes.create(i*16*sf, 200*sf, 'spikes').setScale(sf).refreshBody();
     }
-    hearts = this.physics.add.staticGroup();
-    set_hearts(hearts, lives);
-    baddies = this.physics.add.group();
     for (let i = 0; i < 5; i++) {
         baddies.create(Phaser.Math.Between(64, 960)*sf, 0, 'baddie').setScale(sf).setBounce(0.5).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
     }
+}
+function level_2(){
+    this.add.image(128*sf,480*sf,'bg_mountains').setScale(sf);
+    platforms.create(128*sf, 944*sf, 'pf_mountains').setScale(sf*32, sf*4).refreshBody();
+    platforms.create(32*sf, 896*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(48*sf, 832*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*sf, 800*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(64*sf, 784*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(176*sf, 752*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(184*sf, 720*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*sf, 688*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(128*sf, 656*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*sf, 600*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*sf, 536*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(160*sf, 480*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(128*sf, 420*sf, 'pf_mountains').setScale(sf*4, sf).refreshBody();
+    platforms.create(64*sf, 360*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(192*sf, 360*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(80*sf, 288*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(176*sf, 288*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(96*sf, 216*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(160*sf, 216*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(112*sf, 144*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(144*sf, 144*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
+    platforms.create(128*sf, 64*sf, 'pf_mountains').setScale(sf*2, sf).refreshBody();
+    this.physics.world.setBounds(0, 0, 256*sf, 240*sf*4);
+    camera.setBounds(0, 0, 256*sf, 240*sf*4);
+    camera.startFollow(player, true, 0, 0.05, -80*sf, 0*sf);
+    for (let i = 0; i < 5; i++) {
+        baddies.create(Phaser.Math.Between(64, 192)*sf, 920*sf, 'baddie').setScale(sf).setBounce(0.5).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
+    }
+}
+function create (){
+    platforms = this.physics.add.staticGroup();
+    camera = this.cameras.main;
+    cursors = this.input.keyboard.createCursorKeys();
+    spikes = this.physics.add.staticGroup();
+    hearts = this.physics.add.staticGroup();
+    baddies = this.physics.add.group();
 
+    switch (level){
+        case 1:
+            player = this.physics.add.sprite(16*sf,192*sf,'player').setScale(sf).setBounce(0.2).setCollideWorldBounds(true).setDepth(1);
+            level_1.call(this);
+            break;
+        case 2:
+            player = this.physics.add.sprite(16*sf,920*sf,'player').setScale(sf).setBounce(0.2).setCollideWorldBounds(true).setDepth(1);
+            level_2.call(this);
+            break;
+    }
+    set_hearts(hearts, lives);
+    this.physics.add.collider(player, platforms);
     this.physics.add.collider(baddies, platforms);
     this.physics.add.collider(baddies, baddies);
     this.physics.add.collider(player, baddies, loselife, null, this);
@@ -134,12 +175,11 @@ function update(){
     }
 
     if (cursors.up.isDown &&
+        Phaser.Input.Keyboard.JustDown(cursors.up) &&
         (player.body.touching.down || ((powerups & 1) && ((powerups & 2) || (jumped < 2))))) //Ugly hack
     {
         player.setVelocityY(-jump);
-        if (Phaser.Input.Keyboard.JustDown(cursors.up)){
-            jumped++;
-        }
+        jumped++;
     }
     if (player.body.touching.down)
     {
