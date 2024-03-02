@@ -255,7 +255,7 @@ gameScene.update = function(){
     }
     else
     {
-        player.setVelocityX(0);
+        player.setVelocityX(player.VelocityX*0.95);
     }
 
     if (cursors.up.isDown &&
