@@ -222,19 +222,19 @@ gameScene.create = function (){
     Jet = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
     switch (level){
         case 1:
-            player = this.physics.add.sprite(16*sf,192*sf,'player').setScale(sf).setBounce(0.2).setCollideWorldBounds(true).setDepth(1);
+            player = this.physics.add.sprite(16*sf,192*sf,'player').setScale(sf).setBounce(0).setCollideWorldBounds(true).setDepth(1);
             level_1.call(this);
             break;
         case 2:
-            player = this.physics.add.sprite(16*sf,920*sf,'player').setScale(sf).setBounce(0.2).setCollideWorldBounds(true).setDepth(1);
+            player = this.physics.add.sprite(16*sf,920*sf,'player').setScale(sf).setBounce(0).setCollideWorldBounds(true).setDepth(1);
             level_2.call(this);
             break;
         case 3:
-            player = this.physics.add.sprite(16*sf,920*sf,'player').setScale(sf).setBounce(0.2).setCollideWorldBounds(true).setDepth(1);
+            player = this.physics.add.sprite(16*sf,920*sf,'player').setScale(sf).setBounce(0).setCollideWorldBounds(true).setDepth(1);
             level_3.call(this);
             break;
         case 4:
-            player = this.physics.add.sprite(16*sf,16*sf,'player').setScale(sf).setBounce(0.2).setCollideWorldBounds(true).setDepth(1);
+            player = this.physics.add.sprite(16*sf,16*sf,'player').setScale(sf).setBounce(0).setCollideWorldBounds(true).setDepth(1);
             level_4.call(this);
             break;
     }
