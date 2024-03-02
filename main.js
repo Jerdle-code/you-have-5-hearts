@@ -141,7 +141,7 @@ function level_1(){
     platforms.create(720*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
     platforms.create(816*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
     platforms.create(912*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
-    platforms.create(1024*sf, 32*sf, 'pf_hills').setScale(sf*8, sf).refreshBody();
+    platforms.create(1000*sf, 32*sf, 'pf_hills').setScale(sf*6, sf).refreshBody();
     this.physics.world.setBounds(0, 0, 256*sf*4, 240*sf);
     camera.setBounds(0, 0, 256*sf*4, 240*sf);
     camera.startFollow(player, true, 0.05, 0, -80*sf, 0*sf);
