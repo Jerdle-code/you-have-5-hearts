@@ -84,6 +84,7 @@ function loselife(){
 }
 function gameOver(){
     console.log("You lose");
+    create_level.call(this, 1)
 }
 function revuln(){
     invuln = false;
@@ -210,7 +211,7 @@ function level_4(){
     camera.setBounds(0, 0, 256*sf, 2400*sf);
     camera.startFollow(player, true, 0.5, 0.5, 0*sf, 0*sf);
 }
-gameScene.create = function (){
+function create_level(level){
     platforms = this.physics.add.staticGroup();
     camera = this.cameras.main;
     cursors = this.input.keyboard.createCursorKeys();
@@ -243,6 +244,10 @@ gameScene.create = function (){
     this.physics.add.collider(baddies, platforms);
     this.physics.add.collider(baddies, baddies);
     this.physics.add.collider(player, baddies, hitBad, null, this);
+    this.physics.add.collider(player, spikes, loselife, null, this);
+}
+gameScene.create = function (){
+    create_level.call(this, 1)
 }
 gameScene.update = function(){
     if (cursors.left.isDown)
