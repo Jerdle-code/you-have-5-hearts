@@ -15,7 +15,7 @@ var config = {
     }
 };
 var game = new Phaser.Game(config);
-var player;
+let player;
 var platforms;
 var spikes;
 var baddies;
@@ -45,6 +45,8 @@ let Fire;
 let Jet;
 let jetpack_enabled;
 let goal;
+let jump_boots;
+let game_level = 1;
 function hitBad(object1, object2){
     if (object2.body.touching.up){
         object2.destroy();
@@ -54,7 +56,10 @@ function hitBad(object1, object2){
 }
 function levelUp(){
     this.scene.restart();
-    create_level.call(this, (level + 1));
+    create_level.call(this, (game_level + 1));
+}
+function addJump(){
+    powerups |= 1;
 }
 function reverseGravity(){
     if (antigrav > 0 && powerups & 4){
@@ -126,6 +131,7 @@ gameScene.preload = function() {
     this.load.image('noheart', './img/Heart_empty.png');
     this.load.image('baddie', './img/Baddie.png');
     this.load.image('goal', './img/goal.png');
+    this.load.image('jump', './img/Jump.png');
 }
 function level_1(){
     this.add.image(512*sf,120*sf,'bg_hills').setScale(sf);
@@ -141,7 +147,7 @@ function level_1(){
     platforms.create(720*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
     platforms.create(816*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
     platforms.create(912*sf, 64*sf, 'pf_hills').setScale(sf*4, sf).refreshBody();
-    platforms.create(1000*sf, 32*sf, 'pf_hills').setScale(sf*8, sf).refreshBody();
+    platforms.create(1000*sf, 48*sf, 'pf_hills').setScale(sf*12, sf).refreshBody();
     this.physics.world.setBounds(0, 0, 256*sf*4, 240*sf);
     camera.setBounds(0, 0, 256*sf*4, 240*sf);
     camera.startFollow(player, true, 0.05, 0, -80*sf, 0*sf);
@@ -151,7 +157,8 @@ function level_1(){
     for (let i = 0; i < 5; i++) {
         baddies.create(Phaser.Math.Between(64, 960)*sf, 0, 'baddie').setScale(sf).setBounce(0.75).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
     }
-    goal = this.physics.add.staticSprite(1008*sf,16*sf,'goal').setScale(sf).refreshBody();
+    goal = this.physics.add.staticSprite(1008*sf,32*sf,'goal').setScale(sf).refreshBody();
+    jump_boots = this.physics.add.staticSprite(984*sf,40*sf,'jump').setScale(sf).refreshBody();
 }
 function level_2(){
     this.add.image(128*sf,480*sf,'bg_mountains').setScale(sf);
@@ -176,13 +183,14 @@ function level_2(){
     platforms.create(160*sf, 216*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
     platforms.create(112*sf, 144*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
     platforms.create(144*sf, 144*sf, 'pf_mountains').setScale(sf, sf).refreshBody();
-    platforms.create(128*sf, 64*sf, 'pf_mountains').setScale(sf*2, sf).refreshBody();
+    platforms.create(128*sf, 72*sf, 'pf_mountains').setScale(sf*2, sf).refreshBody();
     this.physics.world.setBounds(0, 0, 256*sf, 240*sf*4);
     camera.setBounds(0, 0, 256*sf, 240*sf*4);
     camera.startFollow(player, true, 0, 0.05, -80*sf, 0*sf);
     for (let i = 0; i < 5; i++) {
         baddies.create(Phaser.Math.Between(64, 192)*sf, 920*sf, 'baddie').setScale(sf).setBounce(0.75).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
     }
+    goal = this.physics.add.staticSprite(128*sf,56*sf,'goal').setScale(sf).refreshBody();
 }
 function level_3(){
     this.add.image(512*sf,480*sf,'bg_space').setScale(sf);
@@ -232,6 +240,7 @@ function create_level(level){
     Grav = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
     Fire = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
     Jet = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+    game_level = level;
     switch (level){
         case 1:
             player = this.physics.add.sprite(16*sf,192*sf,'player').setScale(sf).setBounce(0).setCollideWorldBounds(true).setDepth(1);
@@ -257,9 +266,10 @@ function create_level(level){
     this.physics.add.collider(player, baddies, hitBad, null, this);
     this.physics.add.collider(player, spikes, loselife, null, this);
     this.physics.add.collider(player, goal, levelUp, null, this);
+    this.physics.add.collider(player, jump_boots, addJump, null, this);
 }
 gameScene.create = function (){
-    create_level.call(this, 1)
+    create_level.call(this, game_level);
 }
 gameScene.update = function(){
     if (cursors.left.isDown)
