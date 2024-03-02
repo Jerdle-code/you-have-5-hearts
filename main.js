@@ -88,6 +88,7 @@ function gameOver(){
     lives = 5;
     jetpack_enabled = false;
     invuln = false;
+    powerups = powerups & 224;
 }
 function revuln(){
     invuln = false;
