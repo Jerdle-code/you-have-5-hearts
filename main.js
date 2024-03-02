@@ -44,12 +44,17 @@ let Grav;
 let Fire;
 let Jet;
 let jetpack_enabled;
+let goal;
 function hitBad(object1, object2){
     if (object2.body.touching.up){
         object2.destroy();
     } else {
         loselife.call(this);
     }
+}
+function levelUp(){
+    this.scene.restart();
+    create_level.call(this, (level + 1));
 }
 function reverseGravity(){
     if (antigrav > 0 && powerups & 4){
@@ -120,6 +125,7 @@ gameScene.preload = function() {
     this.load.image('heart', './img/Heart.png');
     this.load.image('noheart', './img/Heart_empty.png');
     this.load.image('baddie', './img/Baddie.png');
+    this.load.image('goal', './img/goal.png');
 }
 function level_1(){
     this.add.image(512*sf,120*sf,'bg_hills').setScale(sf);
@@ -145,6 +151,7 @@ function level_1(){
     for (let i = 0; i < 5; i++) {
         baddies.create(Phaser.Math.Between(64, 960)*sf, 0, 'baddie').setScale(sf).setBounce(0.75).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
     }
+    goal = this.physics.add.staticSprite(1008*sf,16*sf,'goal').setScale(sf).refreshBody();
 }
 function level_2(){
     this.add.image(128*sf,480*sf,'bg_mountains').setScale(sf);
@@ -249,6 +256,7 @@ function create_level(level){
     this.physics.add.collider(baddies, baddies);
     this.physics.add.collider(player, baddies, hitBad, null, this);
     this.physics.add.collider(player, spikes, loselife, null, this);
+    this.physics.add.collider(player, goal, levelUp, null, this);
 }
 gameScene.create = function (){
     create_level.call(this, 1)
