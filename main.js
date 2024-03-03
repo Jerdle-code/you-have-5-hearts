@@ -32,7 +32,7 @@ var powerups = 0; //Storing as bitmap for no reason other than 8bitness
 64 = underflow detection
 128 = ammo limit
  */
-var jetpacks = 10;
+var jetpacks = 5;
 var antigrav = 5;
 var ammo = 25;
 var vel = 40 * sf;
@@ -46,7 +46,9 @@ let Jet;
 let jetpack_enabled;
 let goal;
 let jump_boots;
-let game_level = 1;
+let rocket;
+let game_level = 3;
+powerups = 3
 function hitBad(object1, object2){
     if (object2.body.touching.up){
         object2.destroy();
@@ -68,11 +70,18 @@ function reverseGravity(){
         this.physics.world.gravity.y *= -1;
     }
 }
+function addRocket(){
+    powerups |= 2;
+}
+function addAntigrav(){
+    powerups |= 4;
+}
+
 function enableJetpack(){
     if (jetpacks > 0 && powerups & 2){
-        console.log(jetpacks);
         jetpacks--;
         jetpack_enabled = true;
+        set_hud.call(this, hud, powerups, jetpacks);
         this.time.delayedCall(5000, disableJetpack);
     }
 }
@@ -92,7 +101,7 @@ function loselife(){
     }
 }
 function gameOver(){
-    console.log("You lose");
+    alert("You lose");
     this.scene.restart();
     create_level.call(this, 1);
     lives = 5;
@@ -107,9 +116,20 @@ function set_hearts(hearts, lives){
     this.hearts.clear(true);
     for (let i = 0; i < 5; i++){
         if (i < lives){
-            hearts.create(i*20*sf+64, 224*sf, 'heart').setScale(sf).setScrollFactor(0,0).refreshBody();
+            hearts.create((16+i*20)*sf, 224*sf, 'heart').setScale(sf).setScrollFactor(0,0).refreshBody();
         } else {
-            hearts.create(i*20*sf+64, 224*sf, 'noheart').setScale(sf).setScrollFactor(0,0).refreshBody();
+            hearts.create((16+i*20)*sf, 224*sf, 'noheart').setScale(sf).setScrollFactor(0,0).refreshBody();
+        }
+    }
+}
+function set_hud(hud, powerups, jetpacks){
+    hud.clear(true);
+    if (powerups & 1){
+        hud.create(128*sf, 224*sf, 'jump').setScale(sf).setScrollFactor(0,0).refreshBody();
+    }
+    if (powerups & 2){
+        for (let i = 0; i < jetpacks; i++) {
+            hud.create((160+i*20)*sf, 224 * sf, 'rocket').setScale(sf).setScrollFactor(0, 0).refreshBody();
         }
     }
 }
@@ -132,6 +152,8 @@ gameScene.preload = function() {
     this.load.image('baddie', './img/Baddie.png');
     this.load.image('goal', './img/goal.png');
     this.load.image('jump', './img/Jump.png');
+    this.load.image('rocket', './img/Rocket.png');
+    this.load.image('antigrav', './img/Antigrav.png');
 }
 function level_1(){
     this.add.image(512*sf,120*sf,'bg_hills').setScale(sf);
@@ -190,35 +212,42 @@ function level_2(){
     for (let i = 0; i < 5; i++) {
         baddies.create(Phaser.Math.Between(64, 192)*sf, 920*sf, 'baddie').setScale(sf).setBounce(0.75).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-50*sf, 50*sf)).refreshBody();
     }
-    goal = this.physics.add.staticSprite(128*sf,56*sf,'goal').setScale(sf).refreshBody();
+    goal = this.physics.add.staticSprite(128*sf,36*sf,'goal').setScale(sf).refreshBody();
+    rocket = this.physics.add.staticSprite(128*sf,56*sf,'rocket').setScale(sf).refreshBody();
 }
 function level_3(){
     this.add.image(512*sf,480*sf,'bg_space').setScale(sf);
-    platforms.create(128*sf, 944*sf, 'pf_space').setScale(sf*32, sf*4).refreshBody();
-    platforms.create(32*sf, 896*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(48*sf, 832*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(192*sf, 800*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(64*sf, 784*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(176*sf, 752*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(184*sf, 720*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(192*sf, 688*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(128*sf, 656*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(192*sf, 600*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(192*sf, 536*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(160*sf, 480*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(128*sf, 420*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
-    platforms.create(64*sf, 360*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(192*sf, 360*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(80*sf, 288*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(176*sf, 288*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(96*sf, 216*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(160*sf, 216*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(112*sf, 144*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(144*sf, 144*sf, 'pf_space').setScale(sf, sf).refreshBody();
-    platforms.create(128*sf, 64*sf, 'pf_space').setScale(sf*2, sf).refreshBody();
-    this.physics.world.setBounds(0, 0, 256*sf*4, 240*sf*4);
+    platforms.create(32*4*sf, 896*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(48*4*sf, 832*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*4*sf, 800*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(64*4*sf, 784*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(176*4*sf, 752*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(184*4*sf, 720*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*4*sf, 688*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(128*4*sf, 656*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*4*sf, 600*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(192*4*sf, 536*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(160*4*sf, 480*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(128*4*sf, 420*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(64*4*sf, 360*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(192*4*sf, 360*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(80*4*sf, 288*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(176*4*sf, 288*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(96*4*sf, 216*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(160*4*sf, 216*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(112*4*sf, 144*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(144*4*sf, 144*sf, 'pf_space').setScale(sf, sf).refreshBody();
+    platforms.create(128*4*sf, 64*sf, 'pf_space').setScale(sf*2, sf).refreshBody();
+    platforms.create(192*4*sf, 64*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(224*4*sf, 64*sf, 'pf_space').setScale(sf*4, sf).refreshBody();
+    platforms.create(256*4*sf, 64*sf, 'pf_space').setScale(sf*16, sf).refreshBody();
+    this.physics.world.setBounds(0, 0, 256*sf*4, 240*sf*4)
     camera.setBounds(0, 0, 256*sf*4, 240*sf*4);
     camera.startFollow(player, true, 0.05, 0.05, -80*sf, 0*sf);
+    for (let i = 0; i < 15; i++) {
+        baddies.create(Phaser.Math.Between(64, 960)*sf, Phaser.Math.Between(64, 896)*sf, 'baddie').setScale(sf).setBounce(0.75).setCollideWorldBounds(true).setVelocity(Phaser.Math.Between(-200*sf, 200*sf)).refreshBody();
+    }
+    goal = this.physics.add.staticSprite(1000*sf,36*sf,'goal').setScale(sf).refreshBody();
 }
 function level_4(){
     this.add.image(128*sf,480*sf,'bg_space').setScale(sf);
@@ -236,6 +265,7 @@ function create_level(level){
     cursors = this.input.keyboard.createCursorKeys();
     spikes = this.physics.add.staticGroup();
     hearts = this.physics.add.staticGroup();
+    hud = this.physics.add.staticGroup();
     baddies = this.physics.add.group();
     Grav = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
     Fire = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -260,6 +290,7 @@ function create_level(level){
             break;
     }
     set_hearts(hearts, lives);
+    set_hud(hud, powerups, jetpacks);
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(baddies, platforms);
     this.physics.add.collider(baddies, baddies);
@@ -267,6 +298,7 @@ function create_level(level){
     this.physics.add.collider(player, spikes, loselife, null, this);
     this.physics.add.collider(player, goal, levelUp, null, this);
     this.physics.add.collider(player, jump_boots, addJump, null, this);
+    this.physics.add.collider(player, rocket, addRocket, null, this);
 }
 gameScene.create = function (){
     create_level.call(this, game_level);
