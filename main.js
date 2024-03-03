@@ -338,9 +338,9 @@ gameScene.update = function(){
     }
 }
 titleScene.create = function() {
-    let title_text = this.add.text(0, 50*sf, 'You Have Five Hearts', { fontFamily: 'Arial', fontSize: 24*sf, color: '#58f898' });
-    let main_text = this.add.text(0, 80*sf, ' You are stuck in the machine. \n You cannot die. \n You have five hearts.', { fontFamily: 'Arial', fontSize: 8*sf, color: '#f8d8f8' });
-    let button_text = this.add.text(0, 200*sf, 'Click to escape', { fontFamily: 'Arial', fontSize: 30*sf, color: '#008888' });
+    let title_text = this.add.text(0, 50*sf, 'You Have Five Hearts', { fontFamily: 'Courier New', fontSize: 20*sf, color: '#58f898' });
+    let main_text = this.add.text(0, 80*sf, ' You are stuck in the machine. \n You cannot die. \n You have five hearts.', { fontFamily: 'Courier New', fontSize: 8*sf, color: '#f8d8f8' });
+    let button_text = this.add.text(0, 200*sf, 'Click to escape', { fontFamily: 'Courier New', fontSize: 25*sf, color: '#008888' });
     button_text.setInteractive({ useHandCursor: true });
     button_text.on('pointerdown', () => this.clickButton());
 }
