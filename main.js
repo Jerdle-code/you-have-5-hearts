@@ -47,8 +47,7 @@ let jetpack_enabled;
 let goal;
 let jump_boots;
 let rocket;
-let game_level = 3;
-powerups = 3
+let game_level = 1;
 function hitBad(object1, object2){
     if (object2.body.touching.up){
         object2.destroy();
@@ -254,7 +253,7 @@ function level_4(){
     this.add.image(128*sf,1440*sf,'bg_mountains').setScale(sf);
     this.add.image(128*sf,2040*sf,'bg_hills').setScale(sf);
     this.add.image(128*sf,2280*sf,'bg_cave').setScale(sf);
-    platforms.create(256*sf, 2400*sf, 'pf_cave').setScale(sf*4, sf).refreshBody();
+    platforms.create(256*sf, 2400*sf, 'pf_cave').setScale(sf*16, sf).refreshBody();
     this.physics.world.setBounds(0, 0, 256*sf, 2400*sf);
     camera.setBounds(0, 0, 256*sf, 2400*sf);
     camera.startFollow(player, true, 0.5, 0.5, 0*sf, 0*sf);
